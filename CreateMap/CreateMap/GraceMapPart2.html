@@ -1,0 +1,228 @@
+﻿        };   // Above from GrabData
+
+
+function CreateMarker( lat, lon, title, info, iconFile){
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(lat, lon),
+        draggable: false,
+        title: title,
+        icon: iconFile,
+    }
+      );
+    marker.setMap(GoogleMap);
+    markerList[markerList.length] = marker;    // keep track of markers
+
+    // put in info popup
+    google.maps.event.addListener(marker, 'click', function () {
+        var infowindow = new google.maps.InfoWindow({
+            content: info
+        });
+        infowindow.open(GoogleMap, marker);
+    });
+
+}
+
+function ClearPrevMarkers() {
+    // remove marker from map, the dispose the marker
+    for (var i = 0; i < markerList.length; i++) {
+        var marker = markerList[i];
+        marker.setMap(null);
+        marker = null;
+    }
+
+    // clear the array
+    markerList.length = 0;
+}
+
+function UseThisKey(ctKey, startDate, endDate) {
+    // check whether this key meets the selection criteria
+    // ctKey is the key to the DB, like "02/08/16 Number 94"
+    // startVal/endVal are either null if no date is selected, or a Date object.
+    var useCity = false;
+    var useCat = false;
+    var useDate = false;
+    var datacity;
+    var datacat;
+    var ckCity = ""
+    var ckCat = ""
+
+    datacity = copTable[ctKey].incCity;          // like CASA GRANDE AZ 85194
+    datacat = copTable[ctKey].category;
+    // check cities
+    if (AllCities) {
+        useCity = true;
+    } else {
+        for (ckCity in cityList) {                   // ckCity like CASA GRANDE
+            if ((cityList[ckCity] == true) && (datacity.indexOf( ckCity)) > -1){
+                useCity = true;
+                break;
+            }
+        }
+    }
+
+    // check the category
+    if (categoryList[datacat] == true) {
+        useCat = true;
+    }
+
+    // check the date
+    if ((startDate == null) || (endDate == null)) {
+        useDate = true;
+    } else {
+        var recDateVal = ctKey.substr(0, 8);
+        // ugle - 02/23/16 parses as feb 23 1916. Need to convert the year 16 to 2016
+        var pieces = recDateVal.split("/");
+        recDateVal = pieces[0] + "/" + pieces[1] + "/20" + pieces[2];
+        var recDate = new Date(recDateVal);
+        if ((recDate >= startDate) && (recDate <= endDate)){
+            useDate = true;
+        }
+
+    }
+
+
+
+    return useCity && useCat && useDate;
+}
+
+function RebuildMap() {
+    // re-read the selection boxes and redo the markers
+    var markerCount  = 0;
+    if (citySel.options[0].selected) {
+        AllCities = true;
+    } else {
+        AllCities = false;
+        for (var i = 0; i < citySel.options.length; i++) {
+            cityList[citySel.options[i].value] = false;
+            if (citySel.options[i].selected) {
+                cityList[citySel.options[i].value] = true;
+            }
+        }
+    }
+
+
+    for (var i = 0; i < categorySel.options.length; i++) {
+        categoryList[categorySel.options[i].value] = false;
+        if (categorySel.options[i].selected) {
+            categoryList[categorySel.options[i].value] = true;
+        }
+    }
+
+    var startDateVal = null;
+    var startDateTxt = startDate.value.trim();
+    if (startDateTxt !== "") {
+        startDateVal = new Date(startDateTxt)
+    }
+    var endDateVal = null;
+    var endDateTxt = endDate.value.trim();
+    if (endDateTxt !== "") {
+        endDateVal = new Date(endDateTxt)
+    }
+
+    // clear previous markers?
+    ClearPrevMarkers();
+
+    // Add some markers
+    for (var ctKey in copTable)
+    {
+        if (UseThisKey(ctKey, startDateVal, endDateVal)){
+            // build info window text
+            infoText = "<b>" + ctKey + "</b><br />" + copTable[ctKey].incTime + "<br />" + copTable[ctKey].incCategory + "<br />" + copTable[ctKey].address + "<br />" + copTable[ctKey].incCity;
+            CreateMarker( copTable[ctKey].lat, copTable[ctKey].lon, ctKey, infoText, iconTable[copTable[ctKey].category]);
+            markerCount++;
+        }
+    }
+
+    document.getElementById("mappedCount").innerHTML = markerCount;
+}
+
+function initialize() {
+        //  AIzaSyCwccF4RQFbbqQf8aGdRZ8LIZgm5UpcP6g     google map key?
+    // initialize the selections
+    citySel = document.getElementById("citySel")
+    citySel.selectedIndex = 5;    // start with casa grande
+
+    categorySel = document.getElementById("categorySel")     // start with a couple of categories
+    categorySel.options[0].selected = true;
+    categorySel.options[1].selected = true;
+    categorySel.options[3].selected = true;
+    categorySel.options[4].selected = true;
+
+    startDate = document.getElementById("StartDate");
+    endDate = document.getElementById("EndDate");
+    startDate.value = ""
+    endDate.value = ""
+
+    mappedCount = document.getElementById("mappedCount")
+
+    var mapProp = {
+        center: new google.maps.LatLng(33.02931, -111.464268),
+    zoom:10,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  GoogleMap = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+  RebuildMap();
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+        //    login cop235/gbCOP346
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <h1>Grace COP Map</h1><table>
+            <tr><td>Select Desired Categories</td><td>Select Cities</td><td></td><td><input type="button" value="Rebuild Map" onclick="RebuildMap();"></td></tr>
+            <tr>
+                <td>
+                    <select id="categorySel" name="categorySel" size="6" multiple="multiple" >
+                        <option class="green" value="BURGLARY">BURGLARY </option>
+                        <option class="purple" value="BURGL-NO FORCED ENTRY"> BURGL-NO FORCED ENTRY </option>
+                        <option class="yellow" value="SUSPICIOUS ACTIVITY"> SUSPICIOUS ACTIVITY </option>
+                        <option class="blue" value="THEFT, PROPERTY">THEFT, PROPERTY </option>
+                        <option class="red" value="VEHICLE THEFT">VEHICLE THEFT </option>
+                    </select>
+                </td>
+                <td>
+                    <select id="citySel" name='city' size="6" multiple="multiple">
+                        <option value='ANY CITY'>ANY CITY</option>
+                        <option value='AP JNCTN (CITY)'>AP JNCTN (CITY)</option>
+                        <option value='APACHE JUNCTION'>APACHE JUNCTION</option>
+                        <option value='ARIZONA CITY'>ARIZONA CITY</option>
+                        <option value='CASA GR (CITY)'>CASA GR (CITY)</option>
+                        <option value='CASA GRANDE'>CASA GRANDE</option>
+                        <option value='COOLIDGE'>COOLIDGE</option>
+                        <option value='DUDLEYVILLE'>DUDLEYVILLE</option>
+                        <option value='ELOY'>ELOY</option>
+                        <option value='FLORENCE'>FLORENCE</option>
+                        <option value='GOLD CANYON'>GOLD CANYON</option>
+                        <option value='KEARNY'>KEARNY</option>
+                        <option value='MAMMOTH'>MAMMOTH</option>
+                        <option value='MARICOPA'>MARICOPA</option>
+                        <option value='ORACLE'>ORACLE</option>
+                        <option value='QUEEN CREEK'>QUEEN CREEK</option>
+                        <option value='QUEEN VALLEY'>QUEEN VALLEY</option>
+                        <option value='RED ROCK'>RED ROCK</option>
+                        <option value='SADDLEBROOKE'>SADDLEBROOKE</option>
+                        <option value='SAN MANUEL'>SAN MANUEL</option>
+                        <option value='SAN TAN VALLEY'>SAN TAN VALLEY</option>
+                        <option value='STANFIELD'>STANFIELD</option>
+                        <option value='SUPERIOR'>SUPERIOR</option>
+                    </select>
+                </td>
+                <td>
+                    <table>
+                        <tr><td>Start Date</td></tr>
+                        <tr><td><input id="StartDate" type="text" maxlength="10" /><a href="javascript:NewCal('StartDate','mmDDyyyy')"><img src="datepicker/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a></td></tr>
+                        <tr><td>End Date</td></tr>
+                        <tr><td><input id="EndDate" type="text" maxlength="10" /><a href="javascript:NewCal('EndDate','mmddyyyy')"><img src="datepicker/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a></td></tr>
+                    </table>
+                </td>
+                <td>Mapped Incidents: <span id="mappedCount" >0</span></td>
+            </tr>
+        </table>
+    </div>
+    <div id="googleMap" style="width:1200px;height:600px;"></div>
+</body>
+
+</html> 

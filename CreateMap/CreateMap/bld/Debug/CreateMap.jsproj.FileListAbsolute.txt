@@ -1,0 +1,15 @@
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bin\Debug\ReverseMap\resources.pri
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bin\Debug\AppxManifest.xml
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bin\Debug\CreateMap.build.appxrecipe
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\priconfig.xml
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\priconfig.xml.intermediate
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\layout.resfiles
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\layout.resfiles.intermediate
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\resources.resfiles
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\resources.resfiles.intermediate
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\pri.resfiles
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\pri.resfiles.intermediate
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\qualifiers.txt
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\qualifiers.txt.intermediate
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\robert\Dropbox\BrewSky\Programs\GraceMap\CreateMap\CreateMap\bld\Debug\ProjectArchitectures.txt

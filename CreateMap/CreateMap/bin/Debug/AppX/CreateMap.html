@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script>
+function readMyFile(filepath){
+    const fs = require('fs');
+
+    fs.openSync(path, 'r');
+    fs.readFile(filepath, (err, data) => {
+        if (err) throw err;
+    alert(data);
+    });
+}
+        
+
+function initialize() {
+  var mapProp = {
+    center:new google.maps.LatLng(33.508742,-111.120850),
+    zoom:7,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  // Add some markers
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(33.508742, -111.120850),
+  }
+  );
+  marker.setMap(map);
+    // put in info popup
+  var infowindow = new google.maps.InfoWindow({
+      content: "<b>First Marker</b><br/>whats up"
+  });
+  google.maps.event.addListener(marker, 'click', function () {
+      infowindow.open(map, marker);
+  });
+  marker = new google.maps.Marker({
+      position: new google.maps.LatLng(33.608742, -111.220850),
+  }
+  );
+  marker.setMap(map);
+
+  // put in info popup
+  infowindow = new google.maps.InfoWindow({
+      content: "Second Marker<br/>Second <b>line</b>"
+  });
+  google.maps.event.addListener(marker, 'click', function () {
+      infowindow.open(map, marker);
+  }); 
+
+  marker = new google.maps.Marker({
+      position: new google.maps.LatLng(33.408742, -111.020850),
+      icon: 'blueLightOnSmall.png',
+  }
+  );
+  marker.setMap(map);
+    // put in info popup
+  infowindow = new google.maps.InfoWindow({
+      content: "Third Marker<br/>Information here"
+  });
+  google.maps.event.addListener(marker, 'click', function () {
+      infowindow.open(map, marker);
+  });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+        //    login cop235/gbCOP346
+
+readMyFile("C:\\Users\\robert\\Dropbox\\BrewSky\\Programs\\GraceMap\\CreateMap\\SampleData.txt");
+    </script>
+</head>
+
+<body>
+    <div> <h1>Create the Map</h1></div>
+
+    <div id="googleMap" style="width:500px;height:380px;"></div>
+</body>
+
+</html> 

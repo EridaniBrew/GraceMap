@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Grace COP Map</title>
+    <style>
+    </style>
+
+
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script language="javascript" type="text/javascript" src="datepicker/datetimepicker.js">
+
+    //Date Time Picker script- by TengYong Ng of http://www.rainforestnet.com
+    //Script featured on JavaScript Kit (http://www.javascriptkit.com)
+    //For this script, visit http://www.javascriptkit.com
+
+    </script>
+
+    <script>
+        var GoogleMap;      // the map object
+        var citySel;       // tracking these widgets
+        var startDate;
+        var endDate;
+        var categorySel;
+        var mappedCount;
+
+        var AllCities = false;          // if all cities are to be plotted
+        var cityList = [];                       // list of cityList[cityname] = true/false
+        var categoryList = [];                   // list of categoryList[cityname] = true/false
+        var markerList = [];                 // list of markers
+
+    // iconTable.BURGLARY returns blueLight
+        var iconTable = {
+            ALARM: "blueLightOnSmall.png",
+            BURGLARY: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',   
+            "BURGL-NO FORCED ENTRY": 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png',
+            "DISORDERLY CONDUCT": "",
+            DISTURBANCE: "",
+            MISCELLANEOUS: "",
+            "SUSPICIOUS ACTIVITY": 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+            "SUSPICIOUS PERSON": "",
+            "THEFT, PROPERTY": 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',   
+            TRESPASSING: "",
+            "VEHICLE THEFT": 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+            };
+        // copTable["02/22/16 Number 95"].address returns the address for that key
+        var copTable = {
+            //  Section created by GrabData
